@@ -1,6 +1,6 @@
 import subprocess
 import json
-from account import show_current_account_info, add_account, list_accounts, show_account_details_by_name
+from account import show_current_account_info, add_account, list_accounts, show_account_details_by_name, remove_account
 from startup import startup
 import config
 
@@ -21,6 +21,8 @@ def get_choice():
         list_accounts()
     elif choice == '3':
         add_account()
+    elif choice == '4':
+        remove_account()
     elif choice == '5':
         show_account_details_by_name()
     elif choice == '0':
@@ -28,6 +30,7 @@ def get_choice():
         exit(0)
     else:
         print("Invalid choice.")
+
 
 if __name__ == "__main__":
     startup()

@@ -113,6 +113,26 @@ def show_account_details_by_name():
     
     print(f"No account found with the name '{name}'.")
 
+
+def remove_account():
+    """
+    Removes an account and it's secret from the configuration and keyring.
+    """
+    list_accounts()
+    name = input("\nEnter account name to remove: ")
+    accounts = config.value.get("accounts", [])
+    for i, account in enumerate(accounts):
+        if account["Name"] == name:
+            keyring.delete_password("azure_accounts", name)
+            del accounts[i]
+            config.value["accounts"] = accounts
+            config.save_config()
+            print(f"Account '{name}' removed.")
+            return
+    
+    print(f"No account found with the name '{name}'.")
+
+
 """
 Keyring management functions
 """
