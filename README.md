@@ -9,6 +9,6 @@ allow you switch accounts with the greatest of ease.
 
 ## Usage
 
-Simply call `python main.py` and add/remove accounts, switch between accounts,
-and get account details.
+1. Add the directory of this repository to your PATH.
+2. Open powershell and run `kazam` to launch KAZAM.
 
