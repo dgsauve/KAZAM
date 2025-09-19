@@ -66,6 +66,25 @@ def list_accounts():
 """
 Account management functions
 """
+def switch_account():
+    """
+    Switches to a different Azure account using the Azure CLI.
+    """
+    list_accounts()
+    name = input("\nEnter account name to switch to: ")
+    accounts = config.value.get("accounts", [])
+    for account in accounts:
+        if account["Name"] == name:
+            try:
+                subprocess.run(['az.cmd', 'login', '--service-principal', '-u', account['ApplicationId'], '-p', get_secret_from_keyring(name), '--tenant', account['TenantId']], check=True)
+                print(f"Switched to account '{name}'.")
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to switch account: {e}")
+            return
+    
+    print(f"No account found with the name '{name}'.")
+
+
 def add_account():
     """
     Adds a new account to the configuration.
