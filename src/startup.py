@@ -24,10 +24,12 @@ def startup():
     try:
         config.value = json.load(open("config.json"))
     except FileNotFoundError:
-        print("Configuration file not found. Do you wish to create one? (y/n): ", end="")
+        print(
+            "Configuration file not found. Do you wish to create one? (y/n): ", end=""
+        )
         choice = input().strip().lower()
-        if choice == 'y':
-            with open('config.json', 'w') as f:
+        if choice == "y":
+            with open("config.json", "w") as f:
                 json.dump({"accounts": []}, f)
         else:
             print("Exiting...")
