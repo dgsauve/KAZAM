@@ -1,4 +1,11 @@
-from account import add_account, list_accounts, show_account_details_by_name, remove_account, switch_account
+from account import (
+    add_account,
+    list_accounts,
+    show_account_details_by_name,
+    remove_account,
+    switch_account,
+)
+
 
 def show_menu():
     print("\nMenu:")
@@ -13,17 +20,17 @@ def show_menu():
 def get_choice():
     choice = input("Selection: ")
     print()
-    if choice == '1':
+    if choice == "1":
         list_accounts()
-    elif choice == '2':
+    elif choice == "2":
         switch_account()
-    elif choice == '3':
+    elif choice == "3":
         add_account()
-    elif choice == '4':
+    elif choice == "4":
         remove_account()
-    elif choice == '5':
+    elif choice == "5":
         show_account_details_by_name()
-    elif choice == '0':
+    elif choice == "0":
         print("Exiting...")
         exit(0)
     else:

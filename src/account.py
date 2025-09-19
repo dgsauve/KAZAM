@@ -6,6 +6,8 @@ import keyring
 """
 Account information
 """
+
+
 def get_account_name_from_config(app_id):
     """
     Retrieves the account name from the config based on ApplicationId.
@@ -14,7 +16,7 @@ def get_account_name_from_config(app_id):
     for account in accounts:
         if account["ApplicationId"] == app_id:
             return account["Name"]
-    
+
     return None
 
 
@@ -25,11 +27,13 @@ def get_current_account_info():
     Returns:
         dict or None: Parsed JSON account info, or None on failure.
     """
-    result = subprocess.run(['az.cmd', 'account', 'show'], capture_output=True, text=True)
+    result = subprocess.run(
+        ["az.cmd", "account", "show"], capture_output=True, text=True
+    )
     if result.returncode != 0:
         print("Error retrieving account information:", result.stderr)
         return None
-    
+
     return json.loads(result.stdout)
 
 
@@ -43,9 +47,9 @@ def show_current_account_info():
         return
 
     # Resolve the account name from config if possible
-    name = get_account_name_from_config(account_info['user']['name'])
+    name = get_account_name_from_config(account_info["user"]["name"])
     if name is None:
-        name = account_info['user']['name']
+        name = account_info["user"]["name"]
 
     print("Current Azure Account Information:")
     print(f"Subscription: {name}")
@@ -66,6 +70,8 @@ def list_accounts():
 """
 Account management functions
 """
+
+
 def switch_account():
     """
     Switches to a different Azure account using the Azure CLI.
@@ -76,12 +82,25 @@ def switch_account():
     for account in accounts:
         if account["Name"] == name:
             try:
-                subprocess.run(['az.cmd', 'login', '--service-principal', '-u', account['ApplicationId'], '-p', get_secret_from_keyring(name), '--tenant', account['TenantId']], check=True)
+                subprocess.run(
+                    [
+                        "az.cmd",
+                        "login",
+                        "--service-principal",
+                        "-u",
+                        account["ApplicationId"],
+                        "-p",
+                        get_secret_from_keyring(name),
+                        "--tenant",
+                        account["TenantId"],
+                    ],
+                    check=True,
+                )
                 print(f"Switched to account '{name}'.")
             except subprocess.CalledProcessError as e:
                 print(f"Failed to switch account: {e}")
             return
-    
+
     print(f"No account found with the name '{name}'.")
 
 
@@ -93,11 +112,7 @@ def add_account():
     app_id = input("Enter Application ID: ")
     tenant_id = input("Enter Tenant ID: ")
     secret = input("Enter Secret (stored in keyring): ")
-    new_account = {
-        "Name": name,
-        "ApplicationId": app_id,
-        "TenantId": tenant_id
-    }
+    new_account = {"Name": name, "ApplicationId": app_id, "TenantId": tenant_id}
 
     # Store secret in keyring
     store_secret_in_keyring(name, secret)
@@ -106,7 +121,7 @@ def add_account():
     accounts.append(new_account)
     config.value["accounts"] = accounts
     config.save_config()
-    
+
     print(f"Account '{name}' added.")
 
 
@@ -129,7 +144,7 @@ def show_account_details_by_name():
             else:
                 print("  Secret: Not found in keyring.")
             return
-    
+
     print(f"No account found with the name '{name}'.")
 
 
@@ -148,13 +163,15 @@ def remove_account():
             config.save_config()
             print(f"Account '{name}' removed.")
             return
-    
+
     print(f"No account found with the name '{name}'.")
 
 
 """
 Keyring management functions
 """
+
+
 def store_secret_in_keyring(account_name, secret):
     """
     Stores the secret in the system keyring.
@@ -168,5 +185,3 @@ def get_secret_from_keyring(account_name):
     Retrieves the secret from the system keyring.
     """
     return keyring.get_password("azure_accounts", account_name)
-
-
