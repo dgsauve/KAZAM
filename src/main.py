@@ -16,6 +16,7 @@ def list_accounts():
 
 
 def show_menu():
+    print("\nMenu:")
     print("1. List Accounts")
 
 
